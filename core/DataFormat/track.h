@@ -41,6 +41,26 @@ namespace larlite {
 				     fFitMomentum(original.fFitMomentum),
 				     fID(original.fID)
     {}
+    track(const track& original, std::vector<TVector3> offsets) : 
+				     data_base(original),
+				     //fXYZ(original.fXYZ),
+				     fDir(original.fDir),
+				     fCov(original.fCov),
+				     fdQdx(original.fdQdx),
+				     fFitMomentum(original.fFitMomentum),
+				     fID(original.fID)
+    	{	
+		size_t n_offsets = offsets.size();
+		size_t n_steps = original.NumberTrajectoryPoints();
+		
+		//std::cout << "no: " << n_offsets << " ns: " << n_steps << std::endl; 	
+	
+		for (size_t idx=0; idx < n_steps; idx++) {
+			auto p_orig = original.LocationAtPoint(idx);
+			//std::cout << idx << " " << p_orig.X() << " " << p_orig.Y() << " " << p_orig.Z()  << std::endl;
+			fXYZ.push_back(original.LocationAtPoint(idx) + offsets.at(idx));
+		}
+	}
     
     /// Default destructor
     virtual ~track(){}
@@ -145,5 +165,6 @@ namespace larlite {
   };
 }
 #endif
+
 
 /** @} */ // end of doxygen group 
